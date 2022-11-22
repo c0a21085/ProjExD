@@ -34,7 +34,7 @@ def word_quiz(ans_words):
         print("正解です。それでは、具体的に欠損文字を１つずつ入力してください。")
         word_count = len(ans_words)
         for i in range(word_count):
-            ans = str.upper(input(f"{i+1}つ目の文字を大文字または小文字で入力してください："))
+            ans = str.upper(input(f"{i+1}つ目の文字を入力してください："))
             if ans in ans_words:
                 max_count += 1
                 ans_words.remove(ans)
