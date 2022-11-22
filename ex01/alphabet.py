@@ -51,4 +51,3 @@ def word_quiz(ans_words):
 
 if __name__ == "__main__":
     word_quiz(words_loss(words()))
-    
