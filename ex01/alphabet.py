@@ -4,6 +4,7 @@ word_count = 10
 word_loss = 3
 max_count = 0
 
+
 def words():
     word_list = []
     word_num = random.sample(list(range(65, 91)), word_count)
