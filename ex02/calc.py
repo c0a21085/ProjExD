@@ -23,6 +23,15 @@ for num in num_list:
         button.grid(row = 4 - math.ceil(num/3), column= 2)
     elif num % 3 == 2:
         button.grid(row = 4 - math.ceil(num/3), column= 1)   
+
+button = tk.Button(root, text = "+", font = ("",30), width = 4, height = 2)
+button.bind("<1>", button_click)
+button.grid(row = 4 , column= 1)
+
+button = tk.Button(root, text = "=", font = ("",30), width = 4, height = 2)
+button.bind("<1>", button_click)
+button.grid(row = 4 , column= 2)
+
         
 entry = tk.Entry(justify="right", width=10, font=("", 40))
 entry.grid(row = 0, columnspan=3)
