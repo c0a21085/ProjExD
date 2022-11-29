@@ -41,6 +41,8 @@ def button_click(event):
         else:
             entry.delete(0, tk.END)
             entry.insert(tk.END, total)
+    elif txt == "±":
+        pass
     else:
         entry.insert(tk.END, txt)
     #tkm.showinfo(txt, f"{txt}ボタンが押されました")
@@ -57,6 +59,7 @@ num_list.append("AC")
 num_list.append("π")
 num_list.append("漢")
 num_list.append("√")
+num_list.append("±")
 
 #print(num_list)
 for num in num_list:
@@ -96,6 +99,8 @@ for num in num_list:
             button.grid(row = 2, column = 1)
         elif num == "√":
             button.grid(row = 1, column = 0)
+        elif num == "±":
+            button.grid(row = 6, column = 0)
         
 entry = tk.Entry(justify="right", width=30, font=("", 18))
 entry.grid(row = 0, columnspan=4)
