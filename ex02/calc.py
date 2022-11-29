@@ -67,7 +67,7 @@ for num in num_list:
         button = tk.Button(root, text = str(num), font = ("",20), width = 6, height = 2, bg="#f5f5f5")
         button.bind("<1>", button_click)
         if num % 3 == 0 and num != 0:
-            button.grid(row = 6 - math.ceil(num/3), column = 0)
+            button.grid(row = 6 - math.ceil(num/3), column = 0) #math.ceilは()内の数値を切り上げる
         elif num % 3 == 1:
             button.grid(row = 6 - math.ceil(num/3), column = 2)
         elif num % 3 == 2:
