@@ -9,7 +9,12 @@ root.geometry("300x500")
 def button_click(event):
     btn = event.widget
     txt = btn["text"]
-    entry.insert(tk.END, txt)
+    if txt == "=":
+        total = eval(entry.get())
+        entry.delete(0, tk.END)
+        entry.insert(tk.END, total)
+    else:
+        entry.insert(tk.END, txt)
     tkm.showinfo(txt, f"{txt}ボタンが押されました")
 
 num_list = [n for n in range(10)]
