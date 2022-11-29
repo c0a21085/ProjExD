@@ -12,7 +12,10 @@ def button_click(event):
     if txt == "=": #合計
         try:
             total = eval(entry.get())
-        except(SyntaxError or ZeroDivisionError):
+        except(SyntaxError):
+            entry.delete(0, tk.END)
+            entry.insert(tk.END, "Error")
+        except(ZeroDivisionError):
             entry.delete(0, tk.END)
             entry.insert(tk.END, "Error")
         else:
@@ -71,7 +74,7 @@ for num in num_list:
         elif num == ".":
             button.grid(row = 6, column = 2)
         
-entry = tk.Entry(justify="right", width=16, font=("", 20))
+entry = tk.Entry(justify="right", width=16, font=("", 18))
 entry.grid(row = 0, columnspan=5)
 
 root.mainloop()
