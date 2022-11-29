@@ -4,7 +4,7 @@ import math
 
 root = tk.Tk()
 root.title("電卓")
-root.geometry("300x500")
+root.geometry("400x500")
 
 def button_click(event):
     btn = event.widget
@@ -19,7 +19,11 @@ def button_click(event):
 
 num_list = [n for n in range(10)]
 num_list.append("+")
+num_list.append("-")
+num_list.append("*")
+num_list.append("/")
 num_list.append("=")
+
 #print(num_list)
 
 for num in num_list:
@@ -34,11 +38,17 @@ for num in num_list:
             button.grid(row = 4 - math.ceil(num/3), column = 1)
     elif type(num) is str:
         if num == "+":
-            button.grid(row = 4, column = 1)
+            button.grid(row = 1, column = 3)
+        elif num == "-":
+            button.grid(row = 2, column = 3)
+        elif num == "*":
+            button.grid(row = 3, column = 3)
+        elif num == "/":
+            button.grid(row = 4, column = 3)
         elif num == "=":
             button.grid(row = 4, column = 2)
         
-entry = tk.Entry(justify="right", width=10, font=("", 40))
-entry.grid(row = 0, columnspan=3)
+entry = tk.Entry(justify="right", width=14, font=("", 40))
+entry.grid(row = 0, columnspan=4)
 
 root.mainloop()
