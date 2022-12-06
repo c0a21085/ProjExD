@@ -41,7 +41,7 @@ def main_proc():
 
 #Goal地点に付いたらメッセージを表示する
 def Goal():
-    print(mx, my)
+    #print(mx, my)
     if mx == 13 and my == 7: #ゴール地点にいるなら
         mes = tkm.showinfo("Congratulation","ゴールしました！！！")
         if mes == "ok": #okボタンを押したら
