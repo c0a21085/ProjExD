@@ -56,9 +56,9 @@ def Gameover():
 
 if __name__ == "__main__":
     key = ""
-    cx,cy = 150
-    mx,my = 1
-    fig_list = [n for n in range(10)]
+    cx,cy = 150, 150
+    mx,my = 1, 1
+    fig_list = [n for n in range(10)] #こうかとんの画像用のリスト
 
     root = tk.Tk()
     root.title("迷えるこうかとん")
