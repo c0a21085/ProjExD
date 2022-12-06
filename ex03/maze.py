@@ -22,7 +22,7 @@ def main_proc():
     elif key == "Right":
         cx += 20
     canvas.coords("koukaton", cx, cy)
-    root.after(100 ,main_proc)
+    root.after(50 ,main_proc)
 
 if __name__ == "__main__":
     key = ""
@@ -35,8 +35,11 @@ if __name__ == "__main__":
     tori = tk.PhotoImage(file="fig/2.png")
 
     canvas = tk.Canvas(width = 1500, height = 900, bg = "black")
+    mm.show_maze(canvas,mm.make_maze(15,9))
     canvas.create_image(cx, cy, image=tori, tag = "koukaton")
     canvas.pack()
+
+    #mm.show_maze(canvas, mm.make_maze(15,9))
 
     root.bind("<KeyPress>", key_down)
     root.bind("<KeyRelease>", key_up)
