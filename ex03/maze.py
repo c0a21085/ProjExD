@@ -28,6 +28,7 @@ def main_proc():
     if key == "Left": mx -= 1
     if key == "Right": mx += 1
     if maze_list[mx][my] == 1: # 移動先が壁だったら
+        Gameover()
         if key == "Up": my += 1
         if key == "Down": my -= 1
         if key == "Left": mx += 1
@@ -36,7 +37,7 @@ def main_proc():
     cy = 50 + 100 * my
     canvas.coords("koukaton", cx, cy)
     Goal()
-    root.after(100 ,main_proc)
+    root.after(200 ,main_proc)
 
 #Goal地点に付いたらメッセージを表示する
 def Goal():
@@ -47,6 +48,11 @@ def Goal():
             root.destroy() #ゲームを終了する
     else:
         pass
+
+#Gameover(条件：移動先が壁だったら。)
+def Gameover():
+    tkm.showerror("Gameover","壁にぶつかり、けがをしてしまった...") 
+    root.destroy()
 
 if __name__ == "__main__":
     key = ""
