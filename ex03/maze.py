@@ -56,10 +56,8 @@ def Gameover():
 
 if __name__ == "__main__":
     key = ""
-    cx = 150
-    cy = 150
-    mx = 1
-    my = 1
+    cx,cy = 150
+    mx,my = 1
     fig_list = [n for n in range(10)]
 
     root = tk.Tk()
