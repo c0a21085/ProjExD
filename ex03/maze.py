@@ -1,8 +1,12 @@
 import tkinter as tk
 
+def key_down(event):
+    global key
+    key = event.keysym
+
 if __name__ == "__main__":
     key = ""
-    
+
     root = tk.Tk()
     root.title("迷えるこうかとん")
     
