@@ -42,6 +42,9 @@ def main():
         if key_dict[pg.K_LEFT]:
             tori_rct.centerx -= 1
 
+        x_point += 1
+        y_point += 1
+
         pg.display.update()
         clock.tick(1000) #1000fpsの時を刻む
     
