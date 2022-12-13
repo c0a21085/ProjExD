@@ -5,15 +5,20 @@ def main():
     clock = pg.time.Clock() #時間計測用オブジェクト
 
     pg.display.set_caption("逃げろこうかとん！") #タイトルバーに「」を表示
-    scrn_sfc = pg.display.set_mode((1600, 900)) #1600x900の画面Surfaceを生成
+    scrn_sfc = pg.display.set_mode((1400, 800)) #1600x900の画面Surfaceを生成
 
     bg_sfc = pg.image.load("fig/pg_bg.jpg")
-    #bg_sfc = pg.transform.scale(bg_sfc, (1200, 600))
     bg_rct = bg_sfc.get_rect() #Rect
-    #bg_rct.center = 400, 300
+
+    tori_sfc = pg.image.load("fig/6.png") #Surface
+    tori_sfc = pg.transform.rotozoom(tori_sfc, 0, 2.0)
+    tori_rct = tori_sfc.get_rect() #Rect
+    tori_rct.center = 900, 400
+    scrn_sfc.blit(tori_sfc, tori_rct) #blid
 
     while True:
-        scrn_sfc.blit(bg_sfc, bg_rct) #blid  
+        scrn_sfc.blit(bg_sfc, bg_rct) #blid 
+        #scrn_sfc.blit(tori_sfc, tori_rct) #blid 
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 return
