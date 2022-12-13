@@ -1,5 +1,6 @@
 import pygame as pg
 import sys
+from random import randint
 
 def main():
     clock = pg.time.Clock() #時間計測用オブジェクト
@@ -15,9 +16,18 @@ def main():
     tori_rct = tori_sfc.get_rect() #Rect
     tori_rct.center = 900, 400
 
+    draw_sfc = pg.Surface((100, 100))
+    draw_sfc.set_colorkey((0, 0, 0))
+     
+    x_point = randint(0,scrn_sfc.get_width())
+    y_point = randint(0,scrn_sfc.get_height()) 
+    pg.draw.circle(draw_sfc, (255, 0, 0), (50, 50), 10) 
+
+
     while True:
         scrn_sfc.blit(bg_sfc, bg_rct) #blid
         scrn_sfc.blit(tori_sfc, tori_rct) #blid 
+        scrn_sfc.blit(draw_sfc, (x_point, y_point))
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 return
@@ -31,10 +41,9 @@ def main():
             tori_rct.centerx += 1
         if key_dict[pg.K_LEFT]:
             tori_rct.centerx -= 1
-        #scrn_sfc.blit(tori_sfc, tori_sfc)
 
         pg.display.update()
-        clock.tick(1000) #1fpsの時を刻む
+        clock.tick(1000) #1000fpsの時を刻む
     
 if __name__ == "__main__":
     pg.init()
