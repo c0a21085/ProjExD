@@ -10,6 +10,15 @@ def check_bound(obj_rct ,scr_rct):
         tate = -1
     return yoko, tate
 
+def make_bomb(obj_sfc, obj_rct, scr_sfc):
+    pg.draw.circle(obj_sfc, (255, 0, 0), (50, 50), 10) 
+    obj_rct.centerx = randint(0,scr_sfc.get_width())
+    obj_rct.centery = randint(0,scr_sfc.get_height()) 
+    scr_sfc.blit(obj_sfc, obj_rct) 
+
+def koukaton_change(obj_sfc):
+    obj_sfc = pg.image.load("fig/5.png")
+
 def main():
     clock = pg.time.Clock() #時間計測用オブジェクト
 
@@ -22,7 +31,7 @@ def main():
 
     #プレイヤー(こうかとん)
     tori_sfc = pg.image.load("fig/6.png") #Surface
-    tori_sfc = pg.transform.rotozoom(tori_sfc, 0, 2.0)
+    tori_sfc = pg.transform.rotozoom(tori_sfc,0, 1.5)
     tori_rct = tori_sfc.get_rect() #Rect
     tori_rct.center = 900, 400
     scrn_sfc.blit(tori_sfc, tori_rct) #blid  
@@ -30,12 +39,16 @@ def main():
     #爆弾
     bomb_sfc = pg.Surface((100, 100))
     bomb_sfc.set_colorkey((0, 0, 0))
-    pg.draw.circle(bomb_sfc, (255, 0, 0), (50, 50), 10) 
+    pg.draw.circle(bomb_sfc, (255, 0, 0), (40, 40), 40)
     bomb_rct = bomb_sfc.get_rect() 
+    print(bomb_rct.w)
     bomb_rct.centerx = randint(0,scrn_sfc.get_width())
-    bomb_rct.centery = randint(0,scrn_sfc.get_height()) 
+    bomb_rct.centery = randint(0,scrn_sfc.get_height())
     scrn_sfc.blit(bomb_sfc, bomb_rct)
     vx, vy = 1, 1
+
+    font = pg.font.Font(None, 25)
+    time = 0
 
     while True:
         scrn_sfc.blit(bg_sfc, bg_rct) #blid
@@ -61,10 +74,25 @@ def main():
                         if vy >= 0: #y方向の速さが正だったら
                             vy -= 1
                         else:       #y方向の速さが正だったら
-                            vy += 1 
+                            vy += 1
+                if event.key == pg.K_RIGHT: #→キーが押されたら
+                    #width += 10
+                    pass
+                if event.key == pg.K_LEFT: #←キーが押されたら
+                    if abs(vx) > 0 and abs(vy) > 0: #x,y方向の速さの絶対値が0より大きければ
+                        if vx >= 0: #x方向の速さが正だったら
+                            vx -= 1 
+                        else:       #x方向の速さが負だったら
+                            vx += 1
+                if event.key == pg.K_KP_ENTER:
+                    #make_bomb(bomb_sfc, bomb_rct, scrn_sfc)
+                    #koukaton_change(tori_sfc)
+                    pass          
         bomb_rct.move_ip(vx, vy) 
+        #bomb_rct.inflate_ip(width)
         scrn_sfc.blit(bomb_sfc, bomb_rct)             
             
+        #キー操作
         key_dict = pg.key.get_pressed()
         if key_dict[pg.K_w]:
             tori_rct.centery -= 1
@@ -85,21 +113,25 @@ def main():
                 tori_rct.centerx += 1 
         scrn_sfc.blit(tori_sfc, tori_rct)
 
-        #bomb_rct.move_ip(vx, vy)
-        #scrn_sfc.blit(bomb_sfc, bomb_rct)
+        #爆弾の跳ね返り
         yoko, tate = check_bound(bomb_rct, scrn_rct)
         vx *= yoko
         vy *= tate
 
         if tori_rct.colliderect(bomb_rct):
             return
-        print(vx, vy)
 
+        score = time//100
+        text = font.render(str(score), True, (0,0,0))   # 時間を取得して描画する文字に設定
+        scrn_sfc.blit(text, [20, 100])# 文字列の表示位置
+
+        time += 1
         pg.display.update()
         clock.tick(1000) #1000fpsの時を刻む
     
 if __name__ == "__main__":
     pg.init()
     main()
+    print(f"Score:{score}")
     pg.quit()
     sys.exit()
