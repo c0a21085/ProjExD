@@ -41,6 +41,7 @@ def main():
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 return
+            
         
         key_dict = pg.key.get_pressed()
         if key_dict[pg.K_UP]:
@@ -67,6 +68,10 @@ def main():
         yoko, tate = check_bound(bomb_rct, scrn_rct)
         vx *= yoko
         vy *= tate
+
+        if tori_rct.colliderect(bomb_rct):
+            return
+
         pg.display.update()
         clock.tick(1000) #1000fpsの時を刻む
     
