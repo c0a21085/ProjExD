@@ -14,14 +14,25 @@ def main():
     tori_sfc = pg.transform.rotozoom(tori_sfc, 0, 2.0)
     tori_rct = tori_sfc.get_rect() #Rect
     tori_rct.center = 900, 400
-    scrn_sfc.blit(tori_sfc, tori_rct) #blid
 
     while True:
-        scrn_sfc.blit(bg_sfc, bg_rct) #blid 
-        #scrn_sfc.blit(tori_sfc, tori_rct) #blid 
+        scrn_sfc.blit(bg_sfc, bg_rct) #blid
+        scrn_sfc.blit(tori_sfc, tori_rct) #blid 
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 return
+        
+        key_dict = pg.key.get_pressed()
+        if key_dict[pg.K_UP]:
+            tori_rct.centery -= 1
+        if key_dict[pg.K_DOWN]:
+            tori_rct.centery += 1
+        if key_dict[pg.K_RIGHT]:
+            tori_rct.centerx += 1
+        if key_dict[pg.K_LEFT]:
+            tori_rct.centerx -= 1
+        #scrn_sfc.blit(tori_sfc, tori_sfc)
+
         pg.display.update()
         clock.tick(1000) #1fpsの時を刻む
     
