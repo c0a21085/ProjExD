@@ -37,7 +37,7 @@ def main():
     tori_sfc = pg.transform.rotozoom(tori_sfc,0, 1.5)
     tori_rct = tori_sfc.get_rect() #Rect
     tori_rct.center = 900, 400
-    scrn_sfc.blit(tori_sfc, tori_rct) #blid  
+    scrn_sfc.blit(tori_sfc, tori_rct) #blit  
 
     #爆弾
     bomb_sfc = pg.Surface((100, 100))
