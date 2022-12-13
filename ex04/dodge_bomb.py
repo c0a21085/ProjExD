@@ -21,9 +21,12 @@ def koukaton_change(obj_sfc):
 
 def main():
     clock = pg.time.Clock() #時間計測用オブジェクト
+    time = 0
+    #score = time // 1000
 
     #画面と背景
-    pg.display.set_caption("逃げろこうかとん！") #タイトルバーに「」を表示
+    #pg.display.set_caption(f"逃げろこうかとん！  Score：{time}") 
+    pg.display.set_caption(f"逃げろこうかとん！") #タイトルバーに「」を表示
     scrn_sfc = pg.display.set_mode((1600, 900)) #1600x900の画面Surfaceを生成
     scrn_rct = scrn_sfc.get_rect()
     bg_sfc = pg.image.load("fig/pg_bg.jpg")
@@ -41,14 +44,12 @@ def main():
     bomb_sfc.set_colorkey((0, 0, 0))
     pg.draw.circle(bomb_sfc, (255, 0, 0), (40, 40), 40)
     bomb_rct = bomb_sfc.get_rect() 
-    print(bomb_rct.w)
     bomb_rct.centerx = randint(0,scrn_sfc.get_width())
     bomb_rct.centery = randint(0,scrn_sfc.get_height())
     scrn_sfc.blit(bomb_sfc, bomb_rct)
     vx, vy = 1, 1
-
-    font = pg.font.Font(None, 25)
-    time = 0
+    font = pg.font.Font(None, 60)
+    add = abs(vx)
 
     while True:
         scrn_sfc.blit(bg_sfc, bg_rct) #blid
@@ -65,6 +66,7 @@ def main():
                         vy += 1
                     else:       #y方向の速さが正だったら
                         vy -= 1
+                    add += 1
                 if event.key == pg.K_DOWN: #↓キーが押されたら
                     if abs(vx) > 0 and abs(vy) > 0: #x,y方向の速さの絶対値が0より大きければ
                         if vx >= 0: #x方向の速さが正だったら
@@ -75,6 +77,7 @@ def main():
                             vy -= 1
                         else:       #y方向の速さが正だったら
                             vy += 1
+                        add -= 1
                 if event.key == pg.K_RIGHT: #→キーが押されたら
                     #width += 10
                     pass
@@ -87,7 +90,8 @@ def main():
                 if event.key == pg.K_KP_ENTER:
                     #make_bomb(bomb_sfc, bomb_rct, scrn_sfc)
                     #koukaton_change(tori_sfc)
-                    pass          
+                    pass    
+
         bomb_rct.move_ip(vx, vy) 
         #bomb_rct.inflate_ip(width)
         scrn_sfc.blit(bomb_sfc, bomb_rct)             
@@ -119,19 +123,17 @@ def main():
         vy *= tate
 
         if tori_rct.colliderect(bomb_rct):
-            return
+            return 
 
-        score = time//100
-        text = font.render(str(score), True, (0,0,0))   # 時間を取得して描画する文字に設定
-        scrn_sfc.blit(text, [20, 100])# 文字列の表示位置
-
-        time += 1
+        time += add
+        score = time // 200
+        text = font.render(f"Score:{score}", True, (0,0,0))   # 描画する文字列の設定
+        scrn_sfc.blit(text, [50, 50])# 文字列の表示位置
         pg.display.update()
         clock.tick(1000) #1000fpsの時を刻む
     
 if __name__ == "__main__":
     pg.init()
     main()
-    print(f"Score:{score}")
     pg.quit()
     sys.exit()
