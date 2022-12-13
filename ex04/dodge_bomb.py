@@ -21,7 +21,7 @@ def koukaton_change(obj_sfc):
 
 def main():
     clock = pg.time.Clock() #時間計測用オブジェクト
-    time = 0
+    point = 0
     #score = time // 1000
 
     #画面と背景
@@ -49,7 +49,7 @@ def main():
     scrn_sfc.blit(bomb_sfc, bomb_rct)
     vx, vy = 1, 1
     font = pg.font.Font(None, 60)
-    add = abs(vx)
+    add = abs(vx) #スコアの増加量(速度の絶対値によって決まる)
 
     while True:
         scrn_sfc.blit(bg_sfc, bg_rct) #blid
@@ -66,7 +66,7 @@ def main():
                         vy += 1
                     else:       #y方向の速さが正だったら
                         vy -= 1
-                    add += 1
+                    add += 1 #スコアの増加量を増やす
                 if event.key == pg.K_DOWN: #↓キーが押されたら
                     if abs(vx) > 0 and abs(vy) > 0: #x,y方向の速さの絶対値が0より大きければ
                         if vx >= 0: #x方向の速さが正だったら
@@ -77,7 +77,7 @@ def main():
                             vy -= 1
                         else:       #y方向の速さが正だったら
                             vy += 1
-                        add -= 1
+                        add -= 1 #スコアの増加量を減らす
                 if event.key == pg.K_RIGHT: #→キーが押されたら
                     #width += 10
                     pass
@@ -125,8 +125,8 @@ def main():
         if tori_rct.colliderect(bomb_rct):
             return 
 
-        time += add
-        score = time // 200
+        point += add #pointにaddを加える
+        score = point // 200 #スコアの算出
         text = font.render(f"Score:{score}", True, (0,0,0))   # 描画する文字列の設定
         scrn_sfc.blit(text, [50, 50])# 文字列の表示位置
         pg.display.update()
