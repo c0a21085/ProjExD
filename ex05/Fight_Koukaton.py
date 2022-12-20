@@ -17,10 +17,10 @@ class Screen:
 
 class Bird:
     key_delta = {
-        pg.K_UP:    [0, -1],
-        pg.K_DOWN:  [0, +1],
-        pg.K_LEFT:  [-1, 0],
-        pg.K_RIGHT: [+1, 0],
+        pg.K_w: [0, -1],
+        pg.K_s: [0, +1],
+        pg.K_a: [-1, 0],
+        pg.K_d: [+1, 0],
     }
 
     def __init__(self, img_path, ratio, xy):
@@ -63,6 +63,36 @@ class Bomb:
         self.vx *= yoko
         self.vy *= tate
         self.blit(scr)
+        print(self.vx, self.vy)
+
+    def speed_update(self, press_key): #速度のアップデート
+        #上キーを押すと(速度が早くなる)
+        if press_key == pg.K_UP and self.vx >= 0 and self.vy >= 0: #x方向：正,y方向：正 
+            self.vx += 1
+            self.vy += 1
+        elif press_key == pg.K_UP and self.vx >= 0 and self.vy <= 0: #x方向：正,y方向：負
+            self.vx += 1
+            self.vy -= 1
+        elif press_key == pg.K_UP and self.vx <= 0 and self.vy >= 0: #x方向：負,y方向：正 
+            self.vx -= 1
+            self.vy += 1
+        elif press_key == pg.K_UP and self.vx <= 0 and self.vy <= 0: #x方向：負,y方向：負 
+            self.vx -= 1
+            self.vy -= 1        
+        #下キーを押すと、かつ速度の絶対値が0よりも大きければ(速度が遅くなる)
+        if press_key == pg.K_DOWN and abs(self.vx) > 0 and abs(self.vy) > 0:
+            if self.vx > 0 and self.vy > 0: #x方向：正,y方向：正 
+                self.vx -= 1
+                self.vy -= 1
+            elif self.vx > 0 and self.vy < 0: #x方向：正,y方向：負 
+                self.vx -= 1
+                self.vy += 1
+            elif self.vx < 0 and self.vy > 0: #x方向：負,y方向：正
+                self.vx += 1
+                self.vy -= 1
+            elif self.vx < 0 and self.vy < 0:#x方向：負,y方向：負 
+                self.vx += 1
+                self.vy += 1
 
 
 def check_bound(obj_rct, scr_rct):
@@ -82,7 +112,7 @@ def check_bound(obj_rct, scr_rct):
 def main():
     clock =pg.time.Clock()
 
-    scr = Screen("負けるな！こうかとん", (1600,900), "fig/pg_bg.jpg")
+    scr = Screen("負けるな！こうかとん", (1200,700), "fig/pg_bg.jpg")
 
     bird = Bird("fig/6.png", 2.0, (900,400))
     bird.update(scr)
@@ -95,12 +125,18 @@ def main():
         bomb_list.append(bomb)
     #bomb.update(scr)
 
+    SpeedKey_list = [pg.K_UP, pg.K_DOWN]
     while True:        
         scr.blit()
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 return
+            if event.type == pg.KEYDOWN: #キーが押されたら
+                press_key = event.key 
+                if press_key in SpeedKey_list: #押されたキーが速度調整用のキーならば
+                    for bakudan in bomb_list:
+                        bakudan.speed_update(press_key) #それぞれの爆弾のスピードを変更
 
         bird.update(scr)
         for bakudan in bomb_list:
