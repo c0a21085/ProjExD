@@ -28,6 +28,7 @@ class Bird:
         self.sfc = pg.transform.rotozoom(self.sfc, 0, ratio)
         self.rct = self.sfc.get_rect()
         self.rct.center = xy
+        self.ratio = ratio
 
     def blit(self, scr:Screen):
         scr.sfc.blit(self.sfc, self.rct)
@@ -43,12 +44,20 @@ class Bird:
                 self.rct.centery -= delta[1]
         self.blit(scr)                    
 
+    def koukaton_update(self, press_key, scr:Screen):
+        self.sfc = pg.image.load(f"fig/{press_key}.png")
+        self.sfc = pg.transform.rotozoom(self.sfc, 0, self.ratio)
+        self.rct = self.sfc.get_rect()
+        self.rct.center = self.x, self.y  
+        self.blit(scr)
+
 
 class Bomb:
     def __init__(self, color, rad, vxy, scr:Screen):
         self.sfc = pg.Surface((2*rad, 2*rad)) 
         self.sfc.set_colorkey((0, 0, 0))
-        pg.draw.circle(self.sfc, color, (rad, rad), rad)
+        self.rad = rad
+        pg.draw.circle(self.sfc, color, (self.rad, self.rad), self.rad)
         self.rct = self.sfc.get_rect()
         self.rct.centerx = random.randint(0, scr.rct.width)
         self.rct.centery = random.randint(0, scr.rct.height)
@@ -59,11 +68,11 @@ class Bomb:
 
     def update(self, scr:Screen):
         self.rct.move_ip(self.vx, self.vy)
+        self.rct.fit(self.rct)
         yoko, tate = check_bound(self.rct, scr.rct)
         self.vx *= yoko
         self.vy *= tate
         self.blit(scr)
-        print(self.vx, self.vy)
 
     def speed_update(self, press_key): #速度のアップデート
         #上キーを押すと(速度が早くなる)
@@ -93,6 +102,15 @@ class Bomb:
             elif self.vx < 0 and self.vy < 0:#x方向：負,y方向：負 
                 self.vx += 1
                 self.vy += 1
+    
+    def size_update(self, press_key): #サイズのアップデート
+        #右キーを押す、かつ半径が0以上ならば(サイズが大きくなる)
+        if press_key == pg.K_RIGHT and self.rad >= 0:
+            self.rad += 10
+        #左キーを押す、かつ半径が0よりも大きいならば(サイズが小さくなる)
+        if press_key == pg.K_LEFT and self.rad > 0:
+            self.rad -= 10  
+
 
 
 def check_bound(obj_rct, scr_rct):
@@ -118,7 +136,7 @@ def main():
     bird.update(scr)
 
     bomb_list = []
-    for i in range(5):
+    for i in range(2):
         vx = random.choice([-1, +1])
         vy = random.choice([-1, +1]) 
         bomb = Bomb((255, 0, 0), 10, (vx, vy), scr)
@@ -126,6 +144,8 @@ def main():
     #bomb.update(scr)
 
     SpeedKey_list = [pg.K_UP, pg.K_DOWN]
+    SizeKey_list = [pg.K_RIGHT, pg.K_LEFT]
+    KoukatonKey_list = [pg.K_0, pg.K_1, pg.K_2, pg.K_3, pg.K_4, pg.K_5, pg.K_6, pg.K_7, pg.K_8, pg.K_9]
     while True:        
         scr.blit()
 
@@ -137,6 +157,13 @@ def main():
                 if press_key in SpeedKey_list: #押されたキーが速度調整用のキーならば
                     for bakudan in bomb_list:
                         bakudan.speed_update(press_key) #それぞれの爆弾のスピードを変更
+                if press_key in SizeKey_list: #押されたキーがサイズ調整用のキーならば
+                    for bakudan in bomb_list:
+                        bakudan.size_update(press_key) #それぞれの爆弾のサイズを変更
+                if press_key in KoukatonKey_list: #押されたキーがこうかとんの画像変更用キーならば
+                    for num in range(len(KoukatonKey_list)):
+                        if press_key == KoukatonKey_list[num]:
+                            bird.koukaton_update(num, scr)
 
         bird.update(scr)
         for bakudan in bomb_list:
