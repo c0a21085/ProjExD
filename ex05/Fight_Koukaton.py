@@ -84,11 +84,16 @@ def main():
 
     scr = Screen("逃げろ！こうかとん", (1600,900), "fig/pg_bg.jpg")
 
-    kkt = Bird("fig/6.png", 2.0, (900,400))
-    kkt.update(scr)
+    bird = Bird("fig/6.png", 2.0, (900,400))
+    bird.update(scr)
 
-    bkd = Bomb((255, 0, 0), 10, (+1, +1), scr)
-    bkd.update(scr)
+    bomb_list = []
+    for i in range(5):
+        vx = random.choice([-1, +1])
+        vy = random.choice([-1, +1]) 
+        bomb = Bomb((255, 0, 0), 10, (vx, vy), scr)
+        bomb_list.append(bomb)
+    #bomb.update(scr)
 
     while True:        
         scr.blit()
@@ -97,10 +102,11 @@ def main():
             if event.type == pg.QUIT:
                 return
 
-        kkt.update(scr)
-        bkd.update(scr)
-        if kkt.rct.colliderect(bkd.rct):
-            return
+        bird.update(scr)
+        for bakudan in bomb_list:
+            bomb.update(scr)
+            if bird.rct.colliderect(bomb.rct):
+                return
 
         pg.display.update()
         clock.tick(1000)
