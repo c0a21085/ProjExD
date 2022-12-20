@@ -177,7 +177,7 @@ def main():
         vy = random.choice([-1, +1]) 
         bomb = Bomb((255, 0, 0), 10, (vx, vy), scr)
         bomb_list.append(bomb)
-    #bomb.update(scr)
+    bomb.update(scr)
 
     SpeedKey_list = [pg.K_UP, pg.K_DOWN] #速度調整用キー
     SizeKey_list = [pg.K_RIGHT, pg.K_LEFT] #サイズ調整用キー
