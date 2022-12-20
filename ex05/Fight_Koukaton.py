@@ -129,7 +129,6 @@ class Bomb:
         self.blit(scr) 
 
 
-
 def check_bound(obj_rct, scr_rct):
     """
     第1引数：こうかとんrectまたは爆弾rect
@@ -153,7 +152,7 @@ def main():
     bird.update(scr)
 
     bomb_list = []
-    for i in range(2):
+    for i in range(5):
         vx = random.choice([-1, +1])
         vy = random.choice([-1, +1]) 
         bomb = Bomb((255, 0, 0), 10, (vx, vy), scr)
@@ -163,6 +162,8 @@ def main():
     SpeedKey_list = [pg.K_UP, pg.K_DOWN]
     SizeKey_list = [pg.K_RIGHT, pg.K_LEFT]
     KoukatonKey_list = [pg.K_0, pg.K_1, pg.K_2, pg.K_3, pg.K_4, pg.K_5, pg.K_6, pg.K_7, pg.K_8, pg.K_9]
+    SCORE = 0
+
     while True:        
         scr.blit()
 
@@ -187,6 +188,7 @@ def main():
             bakudan.update(scr)
             if bird.rct.colliderect(bakudan.rct):
                 return
+        Score()
 
         pg.display.update()
         clock.tick(1000)
