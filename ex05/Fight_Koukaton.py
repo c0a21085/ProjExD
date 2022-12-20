@@ -137,7 +137,7 @@ class Score():
         self.color = (0, 0, 0)
     
     def update(self, bomb:Bomb):
-        self.score += (abs(bomb.vx) / 100) * (bomb.rad / 10)
+        self.score += (abs(bomb.vx) / 100) * (bomb.rad / 10) #Scoreの加算
 
     def get_score(self):
         return int(self.score)
