@@ -115,8 +115,8 @@ class Bomb:
         #右キーを押す、かつ半径が0以上ならば(サイズが大きくなる)
         if press_key == pg.K_RIGHT and self.rad >= 0:
             self.rad += 10
-        #左キーを押す、かつ半径が0よりも大きいならば(サイズが小さくなる)
-        if press_key == pg.K_LEFT and self.rad > 0:
+        #左キーを押す、かつ半径が初期値よりも大きいならば(サイズが小さくなる)
+        if press_key == pg.K_LEFT and self.rad > 11:
             self.rad -= 10 
         self.sfc = pg.Surface((2*self.rad, 2*self.rad)) 
         self.sfc.set_colorkey((0, 0, 0))
@@ -128,6 +128,26 @@ class Bomb:
         self.vy = random.choice([-1, +1])
         self.blit(scr) 
 
+class Score():
+    def __init__(self, bomb:Bomb):
+        self.score = 0
+        self.font = pg.font.Font(None, 60)
+        self.font.set_italic(1)
+        self.color = "white"
+    
+    def update(self, bomb:Bomb):
+        self.score += (abs(bomb.vx) / 100) * (bomb.rad / 10)
+
+    def get_score(self):
+        return int(self.score)
+
+    def blit(self, text, scr:Screen):
+        scr.sfc.blit(text, [50, 50])
+
+    def result(self, scr:Screen):
+        text = self.font.render(f"Score:{self.get_score}", True, self.color)   # 描画する文字列の設定
+        self.blit(text, scr)
+    
 
 def check_bound(obj_rct, scr_rct):
     """
@@ -146,7 +166,7 @@ def check_bound(obj_rct, scr_rct):
 def main():
     clock =pg.time.Clock()
 
-    scr = Screen("負けるな！こうかとん", (1200,700), "fig/pg_bg.jpg")
+    scr = Screen("負けるな！こうかとん", (1600,900), "fig/pg_bg.jpg")
 
     bird = Bird("fig/6.png", 2.0, 900, 400)
     bird.update(scr)
@@ -159,10 +179,10 @@ def main():
         bomb_list.append(bomb)
     #bomb.update(scr)
 
-    SpeedKey_list = [pg.K_UP, pg.K_DOWN]
-    SizeKey_list = [pg.K_RIGHT, pg.K_LEFT]
-    KoukatonKey_list = [pg.K_0, pg.K_1, pg.K_2, pg.K_3, pg.K_4, pg.K_5, pg.K_6, pg.K_7, pg.K_8, pg.K_9]
-    SCORE = 0
+    SpeedKey_list = [pg.K_UP, pg.K_DOWN] #速度調整用キー
+    SizeKey_list = [pg.K_RIGHT, pg.K_LEFT] #サイズ調整用キー
+    KoukatonKey_list = [pg.K_0, pg.K_1, pg.K_2, pg.K_3, pg.K_4, pg.K_5, pg.K_6, pg.K_7, pg.K_8, pg.K_9] #画像変更用キー
+    score = Score(bomb) #Scoreの算出
 
     while True:        
         scr.blit()
@@ -187,11 +207,16 @@ def main():
         for bakudan in bomb_list:
             bakudan.update(scr)
             if bird.rct.colliderect(bakudan.rct):
+                print(f"最終スコア：{score.get_score()}")
+                print(score.result(scr))
                 return
-        Score()
+                
+        score.update(bomb)
 
         pg.display.update()
         clock.tick(1000)
+
+    
 
 
 if __name__ == "__main__":
