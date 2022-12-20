@@ -2,13 +2,6 @@ import pygame as pg
 import random
 import sys
 
-key_delta = {
-    pg.K_UP:    [0, -1],
-    pg.K_DOWN:  [0, +1],
-    pg.K_LEFT:  [-1, 0],
-    pg.K_RIGHT: [+1, 0],
-}
-
 class Screen:
     def __init__(self, title = "逃げろ！こうかとん", size = (1600, 900), image = "fig/pg_bg.jpg"):
         pg.display.set_caption(title)
@@ -40,7 +33,7 @@ class Bird():
 
     def update(self, scr:Screen):
         key_dct = pg.key.get_pressed()
-        for key, delta in key_delta.items():
+        for key, delta in Bird.key_delta.items():
             if key_dct[key]:
                 self.rct.centerx += delta[0]
                 self.rct.centery += delta[1]
@@ -64,11 +57,11 @@ class Bomb():
         scr.sfc.blid(self.sfc, self.rct)
 
     def update(self, scr:Screen):
-        self.rct.move_ip(self.vx, self.vy)
-        scr.sfc.blit(self.sfc, self.rct) 
+        self.rct.move_ip(self.vx, self.vy) 
         yoko, tate = check_bound(self.rct, self.rct)
-        vx *= yoko
-        vy *= tate
+        self.vx *= yoko
+        self.vy *= tate
+        self.blid(scr)
 
 
 def check_bound(obj_rct, scr_rct):
