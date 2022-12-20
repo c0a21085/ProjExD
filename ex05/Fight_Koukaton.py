@@ -128,12 +128,13 @@ class Bomb:
         self.vy = random.choice([-1, +1])
         self.blit(scr) 
 
+
+#Score機能
 class Score():
     def __init__(self, bomb:Bomb):
         self.score = 0
         self.font = pg.font.Font(None, 60)
-        self.font.set_italic(1)
-        self.color = "white"
+        self.color = (0, 0, 0)
     
     def update(self, bomb:Bomb):
         self.score += (abs(bomb.vx) / 100) * (bomb.rad / 10)
@@ -141,12 +142,12 @@ class Score():
     def get_score(self):
         return int(self.score)
 
-    def blit(self, text, scr:Screen):
-        scr.sfc.blit(text, [50, 50])
+    def blit(self, scr:Screen):
+        scr.sfc.blit(self.text, (50, 50))
 
     def result(self, scr:Screen):
-        text = self.font.render(f"Score:{self.get_score}", True, self.color)   # 描画する文字列の設定
-        self.blit(text, scr)
+        self.text = self.font.render(f"Score:{int(self.score)}", True, self.color)   # 描画する文字列の設定
+        self.blit(scr)
     
 
 def check_bound(obj_rct, scr_rct):
@@ -165,7 +166,6 @@ def check_bound(obj_rct, scr_rct):
 
 def main():
     clock =pg.time.Clock()
-
     scr = Screen("負けるな！こうかとん", (1600,900), "fig/pg_bg.jpg")
 
     bird = Bird("fig/6.png", 2.0, 900, 400)
@@ -208,10 +208,10 @@ def main():
             bakudan.update(scr)
             if bird.rct.colliderect(bakudan.rct):
                 print(f"最終スコア：{score.get_score()}")
-                print(score.result(scr))
                 return
                 
         score.update(bomb)
+        score.result(scr)
 
         pg.display.update()
         clock.tick(1000)
