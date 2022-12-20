@@ -212,12 +212,9 @@ def main():
                 
         score.update(bomb)
         score.result(scr)
-
         pg.display.update()
         clock.tick(1000)
-
-    
-
+ 
 
 if __name__ == "__main__":
     pg.init()
