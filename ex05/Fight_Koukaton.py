@@ -82,7 +82,7 @@ def check_bound(obj_rct, scr_rct):
 def main():
     clock =pg.time.Clock()
 
-    scr = Screen("逃げろ！こうかとん", (1600,900), "fig/pg_bg.jpg")
+    scr = Screen("負けるな！こうかとん", (1600,900), "fig/pg_bg.jpg")
 
     bird = Bird("fig/6.png", 2.0, (900,400))
     bird.update(scr)
@@ -104,8 +104,8 @@ def main():
 
         bird.update(scr)
         for bakudan in bomb_list:
-            bomb.update(scr)
-            if bird.rct.colliderect(bomb.rct):
+            bakudan.update(scr)
+            if bird.rct.colliderect(bakudan.rct):
                 return
 
         pg.display.update()
