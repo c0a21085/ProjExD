@@ -61,10 +61,13 @@ class Bomb:
         self.sfc = pg.Surface((2*rad, 2*rad)) 
         self.sfc.set_colorkey((0, 0, 0))
         self.rad = rad
-        pg.draw.circle(self.sfc, color, (self.rad, self.rad), self.rad)
+        self.color = color
+        pg.draw.circle(self.sfc, self.color, (self.rad, self.rad), self.rad)
         self.rct = self.sfc.get_rect()
         self.rct.centerx = random.randint(0, scr.rct.width)
         self.rct.centery = random.randint(0, scr.rct.height)
+        self.x = self.rct.centerx
+        self.y = self.rct.centery
         self.vx, self.vy = vxy
 
     def blit(self, scr:Screen):
@@ -72,10 +75,11 @@ class Bomb:
 
     def update(self, scr:Screen):
         self.rct.move_ip(self.vx, self.vy)
-        self.rct.fit(self.rct)
         yoko, tate = check_bound(self.rct, scr.rct)
         self.vx *= yoko
         self.vy *= tate
+        self.x += self.vx
+        self.y += self.vy
         self.blit(scr)
 
     def speed_update(self, press_key): #速度のアップデート
@@ -107,13 +111,22 @@ class Bomb:
                 self.vx += 1
                 self.vy += 1
     
-    def size_update(self, press_key): #サイズのアップデート
+    def size_update(self, press_key, scr:Screen): #サイズのアップデート
         #右キーを押す、かつ半径が0以上ならば(サイズが大きくなる)
         if press_key == pg.K_RIGHT and self.rad >= 0:
             self.rad += 10
         #左キーを押す、かつ半径が0よりも大きいならば(サイズが小さくなる)
         if press_key == pg.K_LEFT and self.rad > 0:
-            self.rad -= 10  
+            self.rad -= 10 
+        self.sfc = pg.Surface((2*self.rad, 2*self.rad)) 
+        self.sfc.set_colorkey((0, 0, 0))
+        pg.draw.circle(self.sfc, self.color, (self.rad, self.rad), self.rad)
+        self.rct = self.sfc.get_rect()
+        self.rct.centerx = self.x
+        self.rct.centery = self.y
+        self.vx = random.choice([-1, +1])
+        self.vy = random.choice([-1, +1])
+        self.blit(scr) 
 
 
 
@@ -163,7 +176,7 @@ def main():
                         bakudan.speed_update(press_key) #それぞれの爆弾のスピードを変更
                 if press_key in SizeKey_list: #押されたキーがサイズ調整用のキーならば
                     for bakudan in bomb_list:
-                        bakudan.size_update(press_key) #それぞれの爆弾のサイズを変更
+                        bakudan.size_update(press_key, scr) #それぞれの爆弾のサイズを変更
                 if press_key in KoukatonKey_list: #押されたキーがこうかとんの画像変更用キーならば
                     for num in range(len(KoukatonKey_list)):
                         if press_key == KoukatonKey_list[num]:
