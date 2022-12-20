@@ -23,11 +23,13 @@ class Bird:
         pg.K_d: [+1, 0],
     }
 
-    def __init__(self, img_path, ratio, xy):
+    def __init__(self, img_path, ratio, x, y):
         self.sfc = pg.image.load(img_path)
         self.sfc = pg.transform.rotozoom(self.sfc, 0, ratio)
         self.rct = self.sfc.get_rect()
-        self.rct.center = xy
+        self.rct.center = (x, y)
+        self.x = x
+        self.y = y
         self.ratio = ratio
 
     def blit(self, scr:Screen):
@@ -42,13 +44,15 @@ class Bird:
             if check_bound(self.rct, scr.rct) != (+1, +1):
                 self.rct.centerx -= delta[0]
                 self.rct.centery -= delta[1]
+            self.x = self.rct.centerx
+            self.y = self.rct.centery
         self.blit(scr)                    
 
-    def koukaton_update(self, press_key, scr:Screen):
-        self.sfc = pg.image.load(f"fig/{press_key}.png")
-        self.sfc = pg.transform.rotozoom(self.sfc, 0, self.ratio)
+    def koukaton_update(self, press_key, scr:Screen): #こうかとんの画像のアップデート
+        self.sfc = pg.image.load(f"fig/{press_key}.png") #押したキー(0~9)に対応した画像を読み込む
+        self.sfc = pg.transform.rotozoom(self.sfc, 0, self.ratio) #サイズは初期状態と同じ
         self.rct = self.sfc.get_rect()
-        self.rct.center = self.x, self.y  
+        self.rct.center = (self.x, self.y) #こうかとんの現在地に座標を合わせる 
         self.blit(scr)
 
 
@@ -132,7 +136,7 @@ def main():
 
     scr = Screen("負けるな！こうかとん", (1200,700), "fig/pg_bg.jpg")
 
-    bird = Bird("fig/6.png", 2.0, (900,400))
+    bird = Bird("fig/6.png", 2.0, 900, 400)
     bird.update(scr)
 
     bomb_list = []
