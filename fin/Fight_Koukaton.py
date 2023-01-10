@@ -86,7 +86,7 @@ class Bomb:
         self.blit(scr)
 
     def speed_update(self, press_key): #速度のアップデート
-        base_speed = 0.5
+        base_speed = 1
         #上キーを押すと(速度が早くなる)
         if press_key == pg.K_UP and self.vx > 0 and self.vy > 0: #x方向：正,y方向：正 
             self.vx += base_speed
@@ -120,7 +120,7 @@ class Bomb:
     
     def size_update(self, press_key, scr:Screen): #サイズのアップデート
         #右キーを押す、かつ半径が0以上ならば(サイズが大きくなる)
-        if press_key == pg.K_RIGHT and self.rad >= 0:
+        if press_key == pg.K_RIGHT:
             self.rad += 6
         #左キーを押す、かつ半径が初期値よりも大きいならば(サイズが小さくなる)
         if press_key == pg.K_LEFT and self.rad > 6:
@@ -131,29 +131,29 @@ class Bomb:
         self.rct = self.sfc.get_rect()
         self.rct.centerx = self.x
         self.rct.centery = self.y
-        self.vx = random.choice([-1, +1])
-        self.vy = random.choice([-1, +1])
+        self.vx += random.choice([-1, +1])
+        self.vy += random.choice([-1, +1])
         self.blit(scr) 
 
 #銃クラス
-class Bullet():
-    def __init__(self, color, rad, vxy, xy, scr:Screen):
+class Bullet:
+    def __init__(self, color, rad, vxy, xy):
         self.sfc = pg.Surface((2*rad, 2*rad)) 
         self.sfc.set_colorkey((0, 0, 0))
         self.rad = rad 
         self.color = color
-        pg.draw.circle(self.sfc, self.color, xy, self.rad)
+        pg.draw.circle(self.sfc, self.color, (self.rad, self.rad), self.rad)
         self.rct = self.sfc.get_rect()
         self.x, self.y = xy
+        self.rct.centerx = self.x
+        self.rct.centery = self.y
         self.vx, self.vy = vxy
 
     def blit(self, scr:Screen):
         scr.sfc.blit(self.sfc, self.rct)
 
     def update(self, scr:Screen):
-        self.rct.move_ip(self.vx, self.vy)
-        self.x += self.vx
-        self.y += self.vy
+        self.rct.move_ip(self.vx, 0)
         self.blit(scr)
     
 
@@ -212,6 +212,7 @@ def main():
     SpeedKey_list = [pg.K_UP, pg.K_DOWN] #速度調整用キー
     SizeKey_list = [pg.K_RIGHT, pg.K_LEFT] #サイズ調整用キー
     KoukatonKey_list = [pg.K_0, pg.K_1, pg.K_2, pg.K_3, pg.K_4, pg.K_5, pg.K_6, pg.K_7, pg.K_8, pg.K_9] #画像変更用キー
+    close_list = [pg.K_ESCAPE, pg.K_q]
     score = Score(bomb) #Scoreの算出
 
     while True:        
@@ -233,8 +234,11 @@ def main():
                         if press_key == KoukatonKey_list[num]:
                             bird.koukaton_update(num, scr)
                 if press_key == pg.K_BACKSPACE:
-                    bullet = Bullet((0, 0, 255), 5, (1, 1), (bird.x, bird.y), scr)
+                    bullet = Bullet((0, 255, 0), 10, (1, 1), (bird.x, bird.y))
                     bullet_list.append(bullet)
+                if press_key in close_list:
+                    return 
+                
 
         bird.update(scr)
         for bakudan in bomb_list:
@@ -243,8 +247,9 @@ def main():
                 print(f"最終スコア：{score.get_score()}")
                 return
             for tama in bullet_list:
+                tama.update(scr)
                 if tama.rct.colliderect(bakudan.rct):
-                    return 
+                    return
                 
         score.update(bomb)
         score.result(scr)
