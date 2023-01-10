@@ -131,8 +131,8 @@ class Bomb:
         self.rct = self.sfc.get_rect()
         self.rct.centerx = self.x
         self.rct.centery = self.y
-        self.vx += random.choice([-1, +1])
-        self.vy += random.choice([-1, +1])
+        #self.vx += random.choice([-1, +1])
+        #self.vy += random.choice([-1, +1])
         self.blit(scr) 
 
 #銃クラス
