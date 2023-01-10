@@ -55,6 +55,9 @@ class Bird:
         self.rct.center = (self.x, self.y) #こうかとんの現在地に座標を合わせる 
         self.blit(scr)
 
+    def get_bird_point(self):
+        return (self.x, self.y)
+
 #爆弾クラス
 class Bomb:
     def __init__(self, color, rad, vxy, scr:Screen):
@@ -120,7 +123,7 @@ class Bomb:
         if press_key == pg.K_RIGHT and self.rad >= 0:
             self.rad += 6
         #左キーを押す、かつ半径が初期値よりも大きいならば(サイズが小さくなる)
-        if press_key == pg.K_LEFT and self.rad > 5:
+        if press_key == pg.K_LEFT and self.rad > 6:
             self.rad -= 6 
         self.sfc = pg.Surface((2*self.rad, 2*self.rad)) 
         self.sfc.set_colorkey((0, 0, 0))
@@ -132,17 +135,27 @@ class Bomb:
         self.vy = random.choice([-1, +1])
         self.blit(scr) 
 
-#StartMenuクラス
-class StartMenu():
-    def __init__(self, screen:Screen):
-        self.font = pg.font.Font(None, 60)
-        self.color = (0, 0, 0)
+#銃クラス
+class Bullet():
+    def __init__(self, color, rad, vxy, xy, scr:Screen):
+        self.sfc = pg.Surface((2*rad, 2*rad)) 
+        self.sfc.set_colorkey((0, 0, 0))
+        self.rad = rad 
+        self.color = color
+        pg.draw.circle(self.sfc, self.color, xy, self.rad)
+        self.rct = self.sfc.get_rect()
+        self.x, self.y = xy
+        self.vx, self.vy = vxy
 
-    def makestartmenu(self):
-        text = self.font.render("Enterキーを押して､ゲームを始めましょう", True, self.color)
-        Screen.blit(text, [100,100])
+    def blit(self, scr:Screen):
+        scr.sfc.blit(self.sfc, self.rct)
 
-        
+    def update(self, scr:Screen):
+        self.rct.move_ip(self.vx, self.vy)
+        self.x += self.vx
+        self.y += self.vy
+        self.blit(scr)
+    
 
 #Scoreクラス
 class Score():
@@ -194,6 +207,8 @@ def main():
         bomb_list.append(bomb)
     bomb.update(scr)
 
+    bullet_list = []
+
     SpeedKey_list = [pg.K_UP, pg.K_DOWN] #速度調整用キー
     SizeKey_list = [pg.K_RIGHT, pg.K_LEFT] #サイズ調整用キー
     KoukatonKey_list = [pg.K_0, pg.K_1, pg.K_2, pg.K_3, pg.K_4, pg.K_5, pg.K_6, pg.K_7, pg.K_8, pg.K_9] #画像変更用キー
@@ -217,6 +232,9 @@ def main():
                     for num in range(len(KoukatonKey_list)):
                         if press_key == KoukatonKey_list[num]:
                             bird.koukaton_update(num, scr)
+                if press_key == pg.K_BACKSPACE:
+                    bullet = Bullet((0, 0, 255), 5, (1, 1), (bird.x, bird.y), scr)
+                    bullet_list.append(bullet)
 
         bird.update(scr)
         for bakudan in bomb_list:
@@ -224,6 +242,9 @@ def main():
             if bird.rct.colliderect(bakudan.rct):
                 print(f"最終スコア：{score.get_score()}")
                 return
+            for tama in bullet_list:
+                if tama.rct.colliderect(bakudan.rct):
+                    return 
                 
         score.update(bomb)
         score.result(scr)
