@@ -14,6 +14,16 @@ class Screen:
     def blit(self):
         self.sfc.blit(self.bgi_sfc, self.bgi_rct) 
 
+"""
+#ゲームの状態クラス(Start, Play, End)
+class GameState:
+    def __init__(self, scr:Screen):
+        font = pg.font.Font(None, 55)
+        text = font.render("ゲームスタート", True, (255, 255, 255))
+        scr.blit(text, [800, 600])
+"""
+        
+
 #鳥クラス
 class Bird:
     key_delta = {
@@ -131,8 +141,6 @@ class Bomb:
         self.rct = self.sfc.get_rect()
         self.rct.centerx = self.x
         self.rct.centery = self.y
-        #self.vx += random.choice([-1, +1])
-        #self.vy += random.choice([-1, +1])
         self.blit(scr) 
 
 #銃クラス
@@ -156,7 +164,6 @@ class Bullet:
         self.rct.move_ip(self.vx, 0)
         self.blit(scr)
     
-
 #Scoreクラス
 class Score():
     def __init__(self, bomb:Bomb):
@@ -177,7 +184,6 @@ class Score():
         self.text = self.font.render(f"Score:{int(self.score)}", True, self.color)   # 描画する文字列の設定
         self.blit(scr)
     
-
 def check_bound(obj_rct, scr_rct):
     """
     第1引数：こうかとんrectまたは爆弾rect
@@ -193,6 +199,9 @@ def check_bound(obj_rct, scr_rct):
 
 
 def main():
+    #gamestate = ["Start", "Play", "end"]
+    #font = pg.font.Font(None, 55)
+
     clock =pg.time.Clock()
     scr = Screen("負けるな！こうかとん", (1600,900), "fig/pg_bg.jpg")
 
@@ -212,11 +221,11 @@ def main():
     SpeedKey_list = [pg.K_UP, pg.K_DOWN] #速度調整用キー
     SizeKey_list = [pg.K_RIGHT, pg.K_LEFT] #サイズ調整用キー
     KoukatonKey_list = [pg.K_0, pg.K_1, pg.K_2, pg.K_3, pg.K_4, pg.K_5, pg.K_6, pg.K_7, pg.K_8, pg.K_9] #画像変更用キー
-    close_list = [pg.K_ESCAPE, pg.K_q]
+    close_list = [pg.K_ESCAPE, pg.K_q] #ゲーム終了用キー
     score = Score(bomb) #Scoreの算出
 
-    while True:        
-        scr.blit()
+    while True: 
+        scr.blit()       
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -233,8 +242,8 @@ def main():
                     for num in range(len(KoukatonKey_list)):
                         if press_key == KoukatonKey_list[num]:
                             bird.koukaton_update(num, scr)
-                if press_key == pg.K_BACKSPACE:
-                    bullet = Bullet((0, 255, 0), 10, (1, 1), (bird.x, bird.y))
+                if press_key == pg.K_BACKSPACE: #押されたキーがbackspaceキーならば
+                    bullet = Bullet((0, 255, 0), 10, (1, 1), (bird.x, bird.y)) #球の生成
                     bullet_list.append(bullet)
                 if press_key in close_list:
                     return 
@@ -253,7 +262,7 @@ def main():
                 
         score.update(bomb)
         score.result(scr)
-        pg.display.update()
+        pg.display.update() 
         clock.tick(1000)
  
 
